@@ -1,0 +1,375 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Pomogator public statistics, schema 1",
+  "type": "object",
+  "required": [
+    "schema",
+    "generated_at",
+    "since",
+    "min_cell",
+    "totals",
+    "funnel",
+    "by_type",
+    "weekly",
+    "waiting_at_start",
+    "median_to_approval",
+    "state"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?Z$"
+    },
+    "since": {
+      "$ref": "#/definitions/month"
+    },
+    "min_cell": {
+      "const": 5
+    },
+    "totals": {
+      "type": "object",
+      "required": [
+        "started",
+        "cases",
+        "filed",
+        "outcomes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "started": {
+          "$ref": "#/definitions/aggregateCount"
+        },
+        "cases": {
+          "$ref": "#/definitions/aggregateCount"
+        },
+        "filed": {
+          "$ref": "#/definitions/aggregateCount"
+        },
+        "outcomes": {
+          "type": "object",
+          "required": [
+            "approved",
+            "denied",
+            "other"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "approved": {
+              "$ref": "#/definitions/count"
+            },
+            "denied": {
+              "$ref": "#/definitions/count"
+            },
+            "other": {
+              "$ref": "#/definitions/count"
+            }
+          }
+        }
+      }
+    },
+    "funnel": {
+      "type": "object",
+      "required": [
+        "started",
+        "cases",
+        "pronto",
+        "q71",
+        "dpn",
+        "outcome"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "started": {
+          "$ref": "#/definitions/aggregateCount"
+        },
+        "cases": {
+          "$ref": "#/definitions/aggregateCount"
+        },
+        "pronto": {
+          "$ref": "#/definitions/aggregateCount"
+        },
+        "q71": {
+          "$ref": "#/definitions/aggregateCount"
+        },
+        "dpn": {
+          "$ref": "#/definitions/aggregateCount"
+        },
+        "outcome": {
+          "$ref": "#/definitions/aggregateCount"
+        }
+      }
+    },
+    "by_type": {
+      "type": "object",
+      "required": [
+        "A",
+        "B",
+        "C"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "A": {
+          "$ref": "#/definitions/count"
+        },
+        "B": {
+          "$ref": "#/definitions/count"
+        },
+        "C": {
+          "$ref": "#/definitions/count"
+        }
+      }
+    },
+    "weekly": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "week_end",
+          "started",
+          "completed",
+          "documents",
+          "filed",
+          "responses",
+          "outcomes"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "week_end": {
+            "type": "string",
+            "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(Z|[+-]([01]\\d|2[0-3]):[0-5]\\d)$"
+          },
+          "started": {
+            "$ref": "#/definitions/aggregateCount"
+          },
+          "completed": {
+            "$ref": "#/definitions/aggregateCount"
+          },
+          "documents": {
+            "$ref": "#/definitions/aggregateCount"
+          },
+          "filed": {
+            "$ref": "#/definitions/aggregateCount"
+          },
+          "responses": {
+            "$ref": "#/definitions/aggregateCount"
+          },
+          "outcomes": {
+            "$ref": "#/definitions/aggregateCount"
+          }
+        }
+      }
+    },
+    "waiting_at_start": {
+      "type": "object",
+      "required": [
+        "unit",
+        "median",
+        "buckets"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "unit": {
+          "const": "business_days"
+        },
+        "median": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "value",
+                "n"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "n": {
+                  "type": "integer",
+                  "minimum": 5
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "buckets": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": [
+            {
+              "type": "object",
+              "required": [
+                "from",
+                "to",
+                "cases"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "from": {
+                  "const": 0
+                },
+                "to": {
+                  "const": 60
+                },
+                "cases": {
+                  "$ref": "#/definitions/count"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "from",
+                "to",
+                "cases"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "from": {
+                  "const": 61
+                },
+                "to": {
+                  "const": 120
+                },
+                "cases": {
+                  "$ref": "#/definitions/count"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "from",
+                "to",
+                "cases"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "from": {
+                  "const": 121
+                },
+                "to": {
+                  "const": 180
+                },
+                "cases": {
+                  "$ref": "#/definitions/count"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "from",
+                "to",
+                "cases"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "from": {
+                  "const": 181
+                },
+                "to": {
+                  "const": 365
+                },
+                "cases": {
+                  "$ref": "#/definitions/count"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "from",
+                "to",
+                "cases"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "from": {
+                  "const": 366
+                },
+                "to": {
+                  "const": null
+                },
+                "cases": {
+                  "$ref": "#/definitions/count"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "median_to_approval": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "value",
+            "n",
+            "unit"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "type": "number",
+              "minimum": 0
+            },
+            "n": {
+              "type": "integer",
+              "minimum": 5
+            },
+            "unit": {
+              "const": "business_days"
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "state": {
+      "type": "object",
+      "required": [
+        "dpn_filed",
+        "dpn_replied"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "dpn_filed": {
+          "$ref": "#/definitions/aggregateCount"
+        },
+        "dpn_replied": {
+          "$ref": "#/definitions/count"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "count": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 5
+    },
+    "month": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+    },
+    "aggregateCount": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

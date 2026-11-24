@@ -1,0 +1,45 @@
+name: Validate data and rebuild the site
+on:
+  push:
+    branches: [main]
+    paths: ['stats.json', 'schema/**', 'scripts/**', 'package*.json', '.github/workflows/**']
+  pull_request:
+    paths: ['stats.json', 'schema/**', 'scripts/**', 'package*.json', '.github/workflows/**']
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.22.3'
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit
+      - run: npm run validate
+  deploy:
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions: {}
+    steps:
+      - name: Trigger Vercel build
+        env:
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        shell: bash
+        run: |
+          if [[ -z "$VERCEL_DEPLOY_HOOK" ]]; then
+            echo 'Deploy hook is not configured'
+            exit 0
+          fi
+          if [[ ! "$VERCEL_DEPLOY_HOOK" =~ ^https://api[.]vercel[.]com/v1/integrations/deploy/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+$ ]]; then
+            echo 'Invalid deploy hook URL'
+            exit 1
+          fi
+          printf 'url = "%s"\n' "$VERCEL_DEPLOY_HOOK" |
+            curl --disable --config - --request POST --silent --fail --output /dev/null --max-time 20
