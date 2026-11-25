@@ -1,10 +1,10 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-24T02:33:47Z",
+  "generated_at": "2026-11-25T18:42:58Z",
   "since": "2026-11",
   "min_cell": 5,
   "totals": {
-    "started": 25,
+    "started": 28,
     "cases": 4,
     "filed": 2,
     "outcomes": {
@@ -14,7 +14,7 @@
     }
   },
   "funnel": {
-    "started": 25,
+    "started": 28,
     "cases": 4,
     "pronto": 2,
     "q71": 0,
