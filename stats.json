@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-25T18:42:58Z",
+  "generated_at": "2026-11-26T06:00:00Z",
   "since": "2026-11",
   "min_cell": 5,
   "totals": {
-    "started": 28,
-    "cases": 4,
-    "filed": 2,
+    "started": 29,
+    "cases": 5,
+    "filed": 3,
     "outcomes": {
       "approved": null,
       "denied": null,
@@ -14,10 +14,10 @@
     }
   },
   "funnel": {
-    "started": 28,
-    "cases": 4,
-    "pronto": 2,
-    "q71": 0,
+    "started": 29,
+    "cases": 5,
+    "pronto": 3,
+    "q71": 1,
     "dpn": 0,
     "outcome": 0
   },
@@ -48,7 +48,10 @@
   ],
   "waiting_at_start": {
     "unit": "business_days",
-    "median": null,
+    "median": {
+      "value": 297,
+      "n": 5
+    },
     "buckets": [
       {
         "from": 0,
